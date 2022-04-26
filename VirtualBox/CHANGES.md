@@ -1,5 +1,8 @@
 # ChangeLog
 
+# 3.2.0
+- VM repo transferred to SIRF-SuperBuild
+
 # 3.1.0
 - update to SIRF 3.1.0
 - `update_VM_to_full_CIL.sh` is preferred way to install CIL. `CIL_LITE` is set to `ON` during SuperBuild.
