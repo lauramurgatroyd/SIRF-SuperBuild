@@ -31,7 +31,7 @@ jobs:
         shell: bash -l {0}
         run: |
           docker-compose -f docker/docker-compose.yml pull core # is this needed here - does it do anything?
-          docker-compose -f docker/docker-compose.yml build -t synerbi/sirf:core --pull core 
+          docker-compose -f docker/docker-compose.yml build --pull core 
           
       # CURRENTLY IN TRAVIS THERE ARE NO 'CORE' TESTS, SO WE HAVE NONE HERE
       
@@ -40,7 +40,7 @@ jobs:
         shell: bash -l {0}
         run: |
           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv.yml pull core
-          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv.yml build sirf -t synerbi/sirf:devel
+          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv.yml build sirf
 
       - name: Run docker service container with tests
         shell: bash -l {0}
@@ -52,7 +52,7 @@ jobs:
         shell: bash -l {0}
         run: |
           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml pull core
-          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml build sirf -t synerbi/sirf:devel
+          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml build sirf
 
       - name: Run docker devel container with tests
         shell: bash -l {0}
