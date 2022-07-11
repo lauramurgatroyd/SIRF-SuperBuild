@@ -24,15 +24,25 @@ jobs:
           sudo apt-get update
           sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
           sudo docker run hello-world
-
-      - name: Build docker image
+          
+          
+      - name: Build docker core image
+        # Builds docker image from Docker file.
+        shell: bash -l {0}
+        run: |
+          docker-compose -f docker/docker-compose.yml pull core # is this needed here - does it do anything?
+          docker-compose -f docker/docker-compose.yml build --pull core -t synerbi/sirf:core
+          
+      # CURRENTLY IN TRAVIS THERE ARE NO 'CORE' TESTS, SO WE HAVE NONE HERE
+      
+      - name: Build docker devel image
         # Builds docker image from Docker file.
         shell: bash -l {0}
         run: |
           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv.yml pull core
-          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv.yml build sirf
+          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv.yml build sirf  -t synerbi/sirf:devel
 
-      - name: Run docker container with tests
+      - name: Run docker devel container with tests
         shell: bash -l {0}
         run: |
           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv.yml run --rm -u jovyan --entrypoint /bin/bash sirf --login -c /devel/test.sh 1
