@@ -1,4 +1,4 @@
-name: Docker build test publish
+name: Docker build service-gpu and core-gpu
 
 on:
   pull_request:
