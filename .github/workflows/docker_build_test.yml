@@ -33,6 +33,11 @@ jobs:
           docker-compose -f docker/docker-compose.yml pull core # is this needed here - does it do anything?
           docker-compose -f docker/docker-compose.yml build --pull core 
           
+      - name: List images
+        shell: bash -l {0}
+        run: |
+          docker image list
+          
       # CURRENTLY IN TRAVIS THERE ARE NO 'CORE' TESTS, SO WE HAVE NONE HERE
       
       - name: Build docker service image
@@ -58,6 +63,22 @@ jobs:
         shell: bash -l {0}
         run: |
           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml run --rm -u jovyan --entrypoint /bin/bash sirf --login -c /devel/test.sh 1
+      
+      - name: Build docker service-devel image
+        # Builds docker image from Docker file.
+        shell: bash -l {0}
+        run: |
+          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml -f docker/docker-compose.srv.yml pull core
+          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml -f docker/docker-compose.srv.yml build sirf
+
+      - name: Run docker devel container with tests
+        shell: bash -l {0}
+        run: |
+          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml docker/docker-compose.srv.yml run --rm -u jovyan --entrypoint /bin/bash sirf --login -c /devel/test.sh 1
           
+      - name: List images 2
+        shell: bash -l {0}
+        run: |
+          docker image list
     # TODO: publish to come later
     # TODO: use matrix for tag names, yml names, etc.
