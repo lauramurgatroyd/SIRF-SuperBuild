@@ -1,4 +1,4 @@
-name: Docker build test publish
+name: Docker build test devek, service, service-devel
 
 on:
   pull_request:
@@ -44,10 +44,10 @@ jobs:
           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml -f docker/docker-compose.srv.yml pull core
           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml -f docker/docker-compose.srv.yml build sirf
 
-      - name: Run docker devel container with tests
+      - name: Run docker service-devel container with tests
         shell: bash -l {0}
         run: |
-          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml docker/docker-compose.srv.yml run --rm -u jovyan --entrypoint /bin/bash sirf --login -c /devel/test.sh 1
+          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml -f docker/docker-compose.srv.yml run --rm -u jovyan --entrypoint /bin/bash sirf --login -c /devel/test.sh 1
           
       - name: List images 2
         shell: bash -l {0}
