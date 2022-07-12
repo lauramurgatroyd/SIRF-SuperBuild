@@ -1,4 +1,4 @@
-name: Docker build test publish
+name: Docker build core, devel, service, service-devel
 
 on:
   pull_request:
@@ -37,6 +37,17 @@ jobs:
         shell: bash -l {0}
         run: |
           docker image list
+          
+      - name : docker save core
+        shell: bash -l {0}
+        run: |
+          docker save -o core.tar core
+          
+      - name: Upload artifact of the conda package.
+        uses: actions/upload-artifact@v2
+        with:
+          name: sirf-core
+          path: core.tar
           
       # CURRENTLY IN TRAVIS THERE ARE NO 'CORE' TESTS, SO WE HAVE NONE HERE
       
