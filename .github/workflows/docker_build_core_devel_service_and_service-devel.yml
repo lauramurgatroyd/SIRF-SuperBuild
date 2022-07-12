@@ -42,7 +42,7 @@ jobs:
         # https://docs.docker.com/engine/reference/commandline/save/
         shell: bash -l {0}
         run: |
-          docker save -o core.tar core
+          docker save -o core.tar synerbi/sirf:core
           
       - name: Upload artifact of the conda package.
         uses: actions/upload-artifact@v2
