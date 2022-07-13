@@ -191,7 +191,7 @@ jobs:
       - name: load core
         shell: bash -l {0}
         run: |
-          docker load --input /tmp/${{ env.prereq_image_name.tar }}
+          docker load --input /tmp/${{ env.prereq_image_name }}.tar
       
       - name: Build docker image
         # Builds docker image from Docker file.
