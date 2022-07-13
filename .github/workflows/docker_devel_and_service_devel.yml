@@ -12,7 +12,10 @@ jobs:
 
       - name: Install docker and pre-reqs
         shell: bash -l {0}
-        run: .github/workflows/install_docker.sh
+        run: |
+         # make the file runnable
+         chmod +x ".github/workflows/install_docker.sh"
+         .github/workflows/install_docker.sh
     
       
       - name: Build docker devel image
