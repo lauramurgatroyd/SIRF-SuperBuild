@@ -2,7 +2,7 @@ name: Docker build test devek, service, service-devel
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ master_test ]
 
 jobs:
   build:
