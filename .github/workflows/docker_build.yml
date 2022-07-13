@@ -146,7 +146,7 @@ jobs:
           shell: bash -l {0}
           run: |
             docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build --pull core 
-            docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build core
+            docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build sirf
             
   build-service-images:
     runs-on: ubuntu-latest
