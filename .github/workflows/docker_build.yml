@@ -21,7 +21,6 @@ jobs:
         # Builds docker image from Docker file.
         shell: bash -l {0}
         run: |
-          docker-compose -f docker/docker-compose.yml pull core # is this needed here - does it do anything?
           docker-compose -f docker/docker-compose.yml build --pull core 
           
       - name : docker save core
@@ -52,7 +51,6 @@ jobs:
         # Builds docker image from Docker file.
         shell: bash -l {0}
         run: |
-          docker-compose -f docker/docker-compose.yml build --pull core 
           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build core
           
       - name : docker save core-gpu
@@ -147,8 +145,8 @@ jobs:
           # Builds docker image from Docker file.
           shell: bash -l {0}
           run: |
-            docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build --pull core 
-            docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build sirf
+            docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml pull core 
+            docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build --pull sirf
             
   build-service-images:
     runs-on: ubuntu-latest
