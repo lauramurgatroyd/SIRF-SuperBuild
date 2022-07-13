@@ -155,7 +155,7 @@ jobs:
     needs: build-devel-and-latest
     strategy:
       matrix:
-        tag: ['service', 'service-devel']
+        tag: ['service', 'devel-service']
     steps:
       - uses: actions/checkout@v3
       - name: Install docker and pre-reqs
@@ -209,6 +209,7 @@ jobs:
         # https://docs.docker.com/engine/reference/commandline/save/
         shell: bash -l {0}
         run: |
+          docker image ls
           docker save -o ${{ matrix.tag }}.tar synerbi/sirf:${{ matrix.tag }}
           
       - name: Upload artifact of image.
