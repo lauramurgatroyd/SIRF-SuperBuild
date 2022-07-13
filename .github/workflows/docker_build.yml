@@ -221,7 +221,7 @@ jobs:
     needs: [build-service-images, build-service-gpu]
     strategy:
       matrix:
-        tag: ['core', 'latest', 'devel', 'service', 'service-devel', 'core-gpu', 'service-gpu']
+        tag: ['core', 'latest', 'devel', 'service', 'devel-service', 'core-gpu', 'service-gpu']
     steps:
       - uses: actions/checkout@v3
       - name: Install docker and pre-reqs
