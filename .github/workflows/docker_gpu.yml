@@ -2,7 +2,7 @@ name: Docker build service-gpu and core-gpu
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ master_test ]
 
 jobs:
   build:
