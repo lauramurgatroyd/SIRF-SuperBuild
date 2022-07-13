@@ -47,6 +47,48 @@ jobs:
           path: core.tar
           
           
+  build-core-gpu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install docker and pre-reqs
+        shell: bash -l {0}
+        run: |
+          sudo apt-get update -y
+          sudo apt-get upgrade -y
+          sudo apt-get install ca-certificates curl gnupg lsb-release -y
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+          sudo docker run hello-world
+          
+          
+      - name: Build docker core-gpu image
+        # Builds docker image from Docker file.
+        shell: bash -l {0}
+        run: |
+          docker-compose -f docker/docker-compose.yml build --pull core 
+          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build core
+          
+          
+      - name : docker save core-gpu
+        # https://docs.docker.com/engine/reference/commandline/save/
+        shell: bash -l {0}
+        run: |
+          docker save -o core-gpu.tar synerbi/sirf:core-gpu
+          
+      - name: Upload artifact of the core image.
+        uses: actions/upload-artifact@v2
+        with:
+          name: sirf-core-gpu
+          path: core-gpu.tar
+          
+          
       # CURRENTLY IN TRAVIS THERE ARE NO 'CORE' TESTS, SO WE HAVE NONE HERE
       
   build-devel-and-latest:
@@ -75,12 +117,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: sirf-core
-#           path: core.tar
+          path: /tmp
 
       - name: load core
         shell: bash -l {0}
         run: |
-          docker load --input sirf-core.tar
+          docker load --input /tmp/sirf-core.tar
       
       - name: Build docker image
         # Builds docker image from Docker file.
@@ -107,6 +149,45 @@ jobs:
         with:
           name: sirf-${{ matrix.tag }}
           path: ${{ matrix.tag }}.tar
+          
+    build-service-gpu:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Install docker and pre-reqs
+          shell: bash -l {0}
+          run: |
+            sudo apt-get update -y
+            sudo apt-get upgrade -y
+            sudo apt-get install ca-certificates curl gnupg lsb-release -y
+            sudo mkdir -p /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+              $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+            sudo docker run hello-world
+            
+        - name: Download artifact of core image
+          uses: actions/download-artifact@v2
+          with:
+            name: sirf-core-gpu
+            path: /tmp
+
+        - name: load core-gpu
+          shell: bash -l {0}
+          run: |
+            docker load --input /tmp/sirf-core-gpu.tar
+
+
+        - name: Build docker service-gpu image
+          # Builds docker image from Docker file.
+          shell: bash -l {0}
+          run: |
+            docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build --pull core 
+            docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build core
       
 #       - name: Build docker devel image
 #         # Builds docker image from Docker file.
