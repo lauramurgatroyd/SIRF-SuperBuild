@@ -51,6 +51,7 @@ jobs:
       
   build-devel-and-latest:
     runs-on: ubuntu-latest
+    needs: build-core
     strategy:
       matrix:
         tag: ['latest', 'devel']
