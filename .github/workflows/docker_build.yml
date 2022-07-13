@@ -215,34 +215,38 @@ jobs:
           name: sirf-${{ matrix.tag }}
           path: ${{ matrix.tag }}.tar
       
-#       - name: Build docker devel image
-#         # Builds docker image from Docker file.
-#         shell: bash -l {0}
-#         run: |
-#           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml pull core
-#           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml build sirf
-
-#       - name: Run docker devel container with tests
-#         shell: bash -l {0}
-#         run: |
-#           docker pull sirf:devel
-#           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml run --rm -u jovyan --entrypoint /bin/bash sirf --login -c /devel/test.sh 1
-      
-#       - name: Build docker service-devel image
-#         # Builds docker image from Docker file.
-#         shell: bash -l {0}
-#         run: |
-#           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml -f docker/docker-compose.srv.yml pull core
-#           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml -f docker/docker-compose.srv.yml build sirf
-
-#       - name: Run docker devel container with tests
-#         shell: bash -l {0}
-#         run: |
-#           docker-compose -f docker/docker-compose.yml -f docker/docker-compose.devel.yml docker/docker-compose.srv.yml run --rm -u jovyan --entrypoint /bin/bash sirf --login -c /devel/test.sh 1
+  upload-images:
+    runs-on: ubuntu-latest
+    needs: build-service-images, build-service-gpu
+    strategy:
+      matrix:
+        tag: ['core', 'latest', 'devel', 'service', 'service-devel', 'core-gpu', 'service-gpu']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install docker and pre-reqs
+        shell: bash -l {0}
+        run: |
+         # make the file runnable
+         chmod +x ".github/workflows/install_docker.sh"
+         .github/workflows/install_docker.sh
           
-#       - name: List images 2
-#         shell: bash -l {0}
-#         run: |
-#           docker image list
+      - name: Download artifact of image
+        uses: actions/download-artifact@v2
+        with:
+          name: sirf-${{ matrix.tag }}
+          path: /tmp
+
+      - name: load image
+        shell: bash -l {0}
+        run: |
+          docker load --input /tmp/${{ matrix.tag }}.tar
+      
+      - name: Upload docker image
+        # Builds docker image from Docker file.
+        shell: bash -l {0}
+        run: |
+          # TODO requirement to 
+          echo "Here we would upload image with name: + ${{ matrix.tag }}"
+          
+          
     # TODO: publish to come later
-    # TODO: use matrix for tag names, yml names, etc.
