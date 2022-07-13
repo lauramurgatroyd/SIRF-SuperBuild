@@ -128,8 +128,8 @@ jobs:
         # Builds docker image from Docker file.
         shell: bash -l {0}
         run: |
-          export compose_command = "docker-compose -f docker/docker-compose.yml"
-          if [[${{ matrix.tag }} == 'devel']]; then export compose_command = "$compose_command + -f docker/docker-compose.devel.yml"; fi
+          export compose_command="docker-compose -f docker/docker-compose.yml"
+          if [[${{ matrix.tag }} == 'devel']]; then export compose_command="$compose_command + -f docker/docker-compose.devel.yml"; fi
           $compose_command pull core
           $compose_command build --pull sirf
 
