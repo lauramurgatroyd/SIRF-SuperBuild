@@ -197,7 +197,7 @@ jobs:
         # Builds docker image from Docker file.
         shell: bash -l {0}
         run: |
-          ${{ env.compose_command }} pull ${{ env.prereq_image_name }}
+          ${{ env.compose_command }} pull sirf
           ${{ env.compose_command }} build --pull sirf
 
       - name: Run docker service container with tests
