@@ -217,7 +217,7 @@ jobs:
       
   upload-images:
     runs-on: ubuntu-latest
-    needs: build-service-images, build-service-gpu
+    needs: [build-service-images, build-service-gpu]
     strategy:
       matrix:
         tag: ['core', 'latest', 'devel', 'service', 'service-devel', 'core-gpu', 'service-gpu']
