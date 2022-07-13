@@ -97,15 +97,16 @@ jobs:
         # Builds docker image from Docker file.
         shell: bash -l {0}
         run: |
-          export compose_command="docker-compose -f docker/docker-compose.yml"
+          export compose_command="docker-compose -f docker/docker-compose.yml" 
           if [[ ${{ matrix.tag }} == 'devel' ]]; then export compose_command="$compose_command -f docker/docker-compose.devel.yml"; fi
           $compose_command pull core
           $compose_command build --pull sirf
+          echo "compose_command=$compose_command" >> $GITHUB_ENV
 
       - name: Run docker container with tests
         shell: bash -l {0}
         run: |
-          $compose_command run --rm -u jovyan --entrypoint /bin/bash sirf --login -c /devel/test.sh 1
+          ${{ env.compose_command }} run --rm -u jovyan --entrypoint /bin/bash sirf --login -c /devel/test.sh 1
           
       - name : docker save image
         # https://docs.docker.com/engine/reference/commandline/save/
@@ -171,37 +172,38 @@ jobs:
            
           if [[ ${{ matrix.tag }} == 'service' ]]; 
           then
-            export prereq_image_name="latest"
+            echo "prereq_image_name="latest"" >> $GITHUB_ENV
             export compose_command="$compose_command -f docker/docker-compose.srv.yml"
           fi
           if [[ ${{ matrix.tag }} == 'service-devel' ]]
           then
-            export prereq_image_name="devel"
+            echo "prereq_image_name="devel"" >> $GITHUB_ENV
             export compose_command="$compose_command -f docker/docker-compose.devel.yml -f docker/docker-compose.srv.yml"
-          fi          
+          fi    
+          echo "compose_command=$compose_command" >> $GITHUB_ENV
           
       - name: Download artifact of image
         uses: actions/download-artifact@v2
         with:
-          name: sirf-$prereq_image_name
+          name: sirf-${{ env.prereq_image_name }}
           path: /tmp
 
       - name: load core
         shell: bash -l {0}
         run: |
-          docker load --input /tmp/$prereq_image_name.tar
+          docker load --input /tmp/${{ env.prereq_image_name.tar }}
       
       - name: Build docker image
         # Builds docker image from Docker file.
         shell: bash -l {0}
         run: |
-          $compose_command pull $prereq_image_name
-          $compose_command build --pull sirf
+          ${{ env.compose_command }} pull ${{ env.prereq_image_name }}
+          ${{ env.compose_command }} build --pull sirf
 
       - name: Run docker service container with tests
         shell: bash -l {0}
         run: |
-          $compose_command run --rm -u jovyan --entrypoint /bin/bash sirf --login -c /devel/test.sh 1
+          ${{ env.compose_command }} run --rm -u jovyan --entrypoint /bin/bash sirf --login -c /devel/test.sh 1
           
       - name : docker save image
         # https://docs.docker.com/engine/reference/commandline/save/
