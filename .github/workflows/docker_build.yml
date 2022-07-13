@@ -74,6 +74,7 @@ jobs:
       matrix:
         tag: ['latest', 'devel']
     steps:
+      - uses: actions/checkout@v3
       - name: Install docker and pre-reqs
         shell: bash -l {0}
         run: |
@@ -97,7 +98,7 @@ jobs:
         shell: bash -l {0}
         run: |
           export compose_command="docker-compose -f docker/docker-compose.yml"
-          if [[${{ matrix.tag }} == 'devel']]; then export compose_command="$compose_command + -f docker/docker-compose.devel.yml"; fi
+          if [[ ${{ matrix.tag }} == 'devel' ]]; then export compose_command="$compose_command + -f docker/docker-compose.devel.yml"; fi
           $compose_command pull core
           $compose_command build --pull sirf
 
@@ -155,6 +156,7 @@ jobs:
       matrix:
         tag: ['service', 'service-devel']
     steps:
+      - uses: actions/checkout@v3
       - name: Install docker and pre-reqs
         shell: bash -l {0}
         run: |
@@ -167,18 +169,16 @@ jobs:
         run: |
           export compose_command="docker-compose -f docker/docker-compose.yml"
            
-          if [[${{ matrix.tag }} == 'service']]; 
+          if [[ ${{ matrix.tag }} == 'service' ]]; 
           then
             export prereq_image_name="latest"
             export compose_command="$compose_command + -f docker/docker-compose.srv.yml"
           fi
-          if [[${{ matrix.tag }} == 'service-devel']]
+          if [[ ${{ matrix.tag }} == 'service-devel' ]]
           then
             export prereq_image_name="devel"
             export compose_command="$compose_command + -f docker/docker-compose.devel.yml + -f docker/docker-compose.srv.yml"
-          fi
-          if [[${{ matrix.tag }} == 'devel']]; then ; fi
-          
+          fi          
           
       - name: Download artifact of image
         uses: actions/download-artifact@v2
