@@ -98,7 +98,7 @@ jobs:
         shell: bash -l {0}
         run: |
           export compose_command="docker-compose -f docker/docker-compose.yml"
-          if [[ ${{ matrix.tag }} == 'devel' ]]; then export compose_command="$compose_command + -f docker/docker-compose.devel.yml"; fi
+          if [[ ${{ matrix.tag }} == 'devel' ]]; then export compose_command="$compose_command -f docker/docker-compose.devel.yml"; fi
           $compose_command pull core
           $compose_command build --pull sirf
 
@@ -172,12 +172,12 @@ jobs:
           if [[ ${{ matrix.tag }} == 'service' ]]; 
           then
             export prereq_image_name="latest"
-            export compose_command="$compose_command + -f docker/docker-compose.srv.yml"
+            export compose_command="$compose_command -f docker/docker-compose.srv.yml"
           fi
           if [[ ${{ matrix.tag }} == 'service-devel' ]]
           then
             export prereq_image_name="devel"
-            export compose_command="$compose_command + -f docker/docker-compose.devel.yml + -f docker/docker-compose.srv.yml"
+            export compose_command="$compose_command -f docker/docker-compose.devel.yml -f docker/docker-compose.srv.yml"
           fi          
           
       - name: Download artifact of image
@@ -246,7 +246,7 @@ jobs:
         shell: bash -l {0}
         run: |
           # TODO requirement to 
-          echo "Here we would upload image with name: + ${{ matrix.tag }}"
+          echo "Here we would upload image with name: ${{ matrix.tag }}"
           
           
     # TODO: publish to come later
