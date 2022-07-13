@@ -150,8 +150,9 @@ jobs:
           name: sirf-${{ matrix.tag }}
           path: ${{ matrix.tag }}.tar
           
-    build-service-gpu:
+  build-service-gpu:
       runs-on: ubuntu-latest
+      needs: build-core-gpu
       steps:
         - uses: actions/checkout@v3
 
