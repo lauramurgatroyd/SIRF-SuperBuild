@@ -208,7 +208,8 @@ jobs:
         shell: bash -l {0}
         run: |
           # first we must delete image that is no longer needed, to save space:
-          docker rm synerbi/sirf:${{ env.prereq_image_name }}
+          docker rm sirf:${{ env.prereq_image_name }}
+          docker rm ${{ env.prereq_image_name }}
           docker image ls
           docker save -o ${{ matrix.tag }}.tar synerbi/sirf:service
           
