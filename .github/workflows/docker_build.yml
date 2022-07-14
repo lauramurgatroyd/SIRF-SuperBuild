@@ -186,7 +186,7 @@ jobs:
           name: sirf-${{ env.prereq_image_name }}
           path: /tmp
 
-      - name: load core
+      - name: load prerequisite image
         shell: bash -l {0}
         run: |
           docker load --input /tmp/${{ env.prereq_image_name }}.tar
@@ -208,7 +208,7 @@ jobs:
         shell: bash -l {0}
         run: |
           docker image ls
-          docker save -o ${{ matrix.tag }}.tar synerbi/sirf:${{ matrix.tag }}
+          docker save -o ${{ matrix.tag }}.tar synerbi/sirf:service
           
       - name: Upload artifact of image.
         uses: actions/upload-artifact@v2
