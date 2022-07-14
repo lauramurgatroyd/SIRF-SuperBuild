@@ -173,7 +173,7 @@ jobs:
             echo "prereq_image_name="latest"" >> $GITHUB_ENV
             export compose_command="$compose_command -f docker/docker-compose.srv.yml"
           fi
-          if [[ ${{ matrix.tag }} == 'service-devel' ]]
+          if [[ ${{ matrix.tag }} == 'devel-service' ]]
           then
             echo "prereq_image_name="devel"" >> $GITHUB_ENV
             export compose_command="$compose_command -f docker/docker-compose.devel.yml -f docker/docker-compose.srv.yml"
@@ -247,6 +247,7 @@ jobs:
         shell: bash -l {0}
         run: |
           # TODO requirement to 
+          docker image ls
           echo "Here we would upload image with name: ${{ matrix.tag }}"
           
           
