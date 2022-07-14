@@ -1,4 +1,4 @@
-name: Docker build core, devel, latest [later will build service-devel and service]
+name: Build all of the sirf docker images
 
 on:
   pull_request:
@@ -209,8 +209,7 @@ jobs:
         run: |
           # first we must delete image that is no longer needed, to save space:
           docker rmi synerbi/sirf:${{ env.prereq_image_name }}
-          docker rmi sirf:${{ env.prereq_image_name }}
-          docker rmi ${{ env.prereq_image_name }}
+          docker system prune 
           docker image ls
           docker save -o ${{ matrix.tag }}.tar synerbi/sirf:service
           
