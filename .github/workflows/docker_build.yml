@@ -51,7 +51,7 @@ jobs:
         # Builds docker image from Docker file.
         shell: bash -l {0}
         run: |
-          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build core
+          docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build --pull core
           
       - name : docker save core-gpu
         # https://docs.docker.com/engine/reference/commandline/save/
@@ -97,7 +97,7 @@ jobs:
         run: |
           export compose_command="docker-compose -f docker/docker-compose.yml" 
           if [[ ${{ matrix.tag }} == 'devel' ]]; then export compose_command="$compose_command -f docker/docker-compose.devel.yml"; fi
-          $compose_command pull core
+          # $compose_command pull core
           $compose_command build --pull sirf
           echo "compose_command=$compose_command" >> $GITHUB_ENV
 
@@ -145,7 +145,7 @@ jobs:
           # Builds docker image from Docker file.
           shell: bash -l {0}
           run: |
-            docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml pull core 
+            # docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml pull core 
             docker-compose -f docker/docker-compose.yml -f docker/docker-compose.srv-gpu.yml build --pull sirf
             
   build-service-images:
@@ -195,7 +195,7 @@ jobs:
         # Builds docker image from Docker file.
         shell: bash -l {0}
         run: |
-          ${{ env.compose_command }} pull sirf
+          # ${{ env.compose_command }} pull sirf
           ${{ env.compose_command }} build --pull sirf
 
       - name: Run docker service container with tests
