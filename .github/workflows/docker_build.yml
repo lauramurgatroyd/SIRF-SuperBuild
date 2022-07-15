@@ -209,7 +209,7 @@ jobs:
         run: |
           # first we must delete image that is no longer needed, to save space:
           docker rmi synerbi/sirf:${{ env.prereq_image_name }}
-          docker system prune -y
+          yes | docker system prune
           docker image ls
           docker save -o ${{ matrix.tag }}.tar synerbi/sirf:service
           
