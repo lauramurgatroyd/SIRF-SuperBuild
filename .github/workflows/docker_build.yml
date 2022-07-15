@@ -28,12 +28,14 @@ jobs:
         shell: bash -l {0}
         run: |
           docker save -o core.tar synerbi/sirf:core
+          ls
+          docker save synerbi/sirf:core-gpu | gzip > core.tar.gz
           
       - name: Upload artifact of the core image.
         uses: actions/upload-artifact@v2
         with:
           name: sirf-core
-          path: core.tar
+          path: core.tar.gz
           
           
   build-core-gpu:
@@ -58,12 +60,15 @@ jobs:
         shell: bash -l {0}
         run: |
           docker save -o core-gpu.tar synerbi/sirf:core-gpu
+          ls
+          docker save synerbi/sirf:core-gpu | gzip > core-gpu.tar.gz
+          ls
           
       - name: Upload artifact of the core image.
         uses: actions/upload-artifact@v2
         with:
           name: sirf-core-gpu
-          path: core-gpu.tar
+          path: core-gpu.tar.gz
       
   build-devel-and-latest:
     runs-on: ubuntu-latest
