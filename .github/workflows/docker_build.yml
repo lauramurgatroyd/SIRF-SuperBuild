@@ -27,9 +27,10 @@ jobs:
         # https://docs.docker.com/engine/reference/commandline/save/
         shell: bash -l {0}
         run: |
-          docker save -o core.tar synerbi/sirf:core
-          ls
+          #docker save -o core.tar synerbi/sirf:core
+          docker image ls
           docker save synerbi/sirf:core-gpu | gzip > core.tar.gz
+          ls -l
           
       - name: Upload artifact of the core image.
         uses: actions/upload-artifact@v2
@@ -59,10 +60,10 @@ jobs:
         # https://docs.docker.com/engine/reference/commandline/save/
         shell: bash -l {0}
         run: |
-          docker save -o core-gpu.tar synerbi/sirf:core-gpu
-          ls
+          #docker save -o core-gpu.tar synerbi/sirf:core-gpu
+          docker image ls
           docker save synerbi/sirf:core-gpu | gzip > core-gpu.tar.gz
-          ls
+          ls -l
           
       - name: Upload artifact of the core image.
         uses: actions/upload-artifact@v2
