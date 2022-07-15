@@ -29,7 +29,7 @@ jobs:
         run: |
           #docker save -o core.tar synerbi/sirf:core
           docker image ls
-          docker save synerbi/sirf:core-gpu | gzip > core.tar.gz
+          docker save synerbi/sirf:core | gzip > core.tar.gz
           ls -l
           
       - name: Upload artifact of the core image.
@@ -60,7 +60,6 @@ jobs:
         # https://docs.docker.com/engine/reference/commandline/save/
         shell: bash -l {0}
         run: |
-          #docker save -o core-gpu.tar synerbi/sirf:core-gpu
           docker image ls
           docker save synerbi/sirf:core-gpu | gzip > core-gpu.tar.gz
           ls -l
@@ -95,7 +94,7 @@ jobs:
       - name: load core
         shell: bash -l {0}
         run: |
-          docker load --input /tmp/core.tar
+          docker load --input /tmp/core.tar.gz
       
       - name: Build docker image
         # Builds docker image from Docker file.
@@ -116,13 +115,13 @@ jobs:
         # https://docs.docker.com/engine/reference/commandline/save/
         shell: bash -l {0}
         run: |
-          docker save -o ${{ matrix.tag }}.tar synerbi/sirf:${{ matrix.tag }}
+          docker save  synerbi/sirf:${{ matrix.tag }} | gzip > ${{ matrix.tag }}.tar.gz
           
       - name: Upload artifact of image.
         uses: actions/upload-artifact@v2
         with:
           name: sirf-${{ matrix.tag }}
-          path: ${{ matrix.tag }}.tar
+          path: ${{ matrix.tag }}.tar.gz
           
   build-service-gpu:
       runs-on: ubuntu-latest
@@ -145,7 +144,7 @@ jobs:
         - name: load core-gpu
           shell: bash -l {0}
           run: |
-            docker load --input /tmp/core-gpu.tar
+            docker load --input /tmp/core-gpu.tar.gz
 
         - name: Build docker service-gpu image
           # Builds docker image from Docker file.
@@ -195,7 +194,7 @@ jobs:
       - name: load prerequisite image
         shell: bash -l {0}
         run: |
-          docker load --input /tmp/${{ env.prereq_image_name }}.tar
+          docker load --input /tmp/${{ env.prereq_image_name }}.tar.gz
       
       - name: Build docker image
         # Builds docker image from Docker file.
@@ -217,13 +216,13 @@ jobs:
           docker rmi synerbi/sirf:${{ env.prereq_image_name }}
           yes | docker system prune
           docker image ls
-          docker save -o ${{ matrix.tag }}.tar synerbi/sirf:service
+          docker save synerbi/sirf:service | gzip > ${{ matrix.tag }}.tar.gz 
           
       - name: Upload artifact of image.
         uses: actions/upload-artifact@v2
         with:
           name: sirf-${{ matrix.tag }}
-          path: ${{ matrix.tag }}.tar
+          path: ${{ matrix.tag }}.tar.gz
       
   upload-images:
     runs-on: ubuntu-latest
@@ -249,7 +248,7 @@ jobs:
       - name: load image
         shell: bash -l {0}
         run: |
-          docker load --input /tmp/${{ matrix.tag }}.tar
+          docker load --input /tmp/${{ matrix.tag }}.tar.gz
       
       - name: Upload docker image
         # Builds docker image from Docker file.
